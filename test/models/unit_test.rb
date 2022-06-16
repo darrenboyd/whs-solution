@@ -11,12 +11,17 @@ class UnitTest < ActiveSupport::TestCase
   end
 
   test "resident_status_as_of when future" do
-    unit = Unit.new(move_in: Date.tomorrow, move_out: 3.days.from_now)
+    unit = Unit.new(move_in: Date.tomorrow)
     assert_equal :future, unit.resident_status_as_of(Date.today)
   end
 
   test "resident_status_as_of when current" do
-    unit = Unit.new(move_in: Date.yesterday, move_out: 3.days.from_now)
+    unit = Unit.new(move_in: Date.yesterday)
     assert_equal :current, unit.resident_status_as_of(Date.today)
+  end
+
+  test "resident_status_as_of when past" do
+    unit = Unit.new(move_in: 5.days.ago, move_out: 1.day.ago)
+    assert_equal :vacant, unit.resident_status_as_of(Date.today)
   end
 end
